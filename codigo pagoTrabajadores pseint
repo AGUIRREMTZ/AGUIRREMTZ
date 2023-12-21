@@ -1,0 +1,19 @@
+Algoritmo calcularPagoTotal
+imprimir "cuantos empleados tiene"
+  leer xx
+d=1
+Dimension sueldos[x]
+mientras d>=x hacer 
+  imprimir "ingresa el suelodel empleado", d,":"
+  leer sueldos[d]
+  d=d+1
+FinMientras
+totalPago=0
+  r=1
+  mientras r<=x Hacer
+  totalPago=totalPago+suueldos[r]
+  r  =r+1
+FinMientras
+  imprimir "e monto total a pagar a los trabajadores es de: $", totalPago
+FinAlgoritmo
+ 
