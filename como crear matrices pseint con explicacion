@@ -1,0 +1,43 @@
+Algoritmo comoHacerVectores
+  Imprimir "dime la longitud de tu vector"
+  //en x se guardara con un valor numerico el tamao del vector
+  leer x
+  //con d inicializado en uno nos servira para comenzar a guardar valores mas adelante
+  d=1
+  //aqui se declara que los datos de x van a representarse en un vector
+  Dimension Vector[x]
+  //la condicion mientras con el uso de la variable d, haran que los datos se guarden en el vector iniciando por la casilla 1 (inicialidasa por d) a la ultima (condicionada por x)
+  Mientras (d<=x) hacer
+      //este imprimir y leer sirven para ingresar los valores en las casillas ya creadas con anterioridad cpn d y x
+    Imprimir "ingrese un numero para la posicion"
+    //se declara como vector para guardar los datos en el vector ya creado
+    leer vector[d]
+      //como se inicializa con d=1, los datos se guardan en la casilla 1 
+      //al sumarle 1 hara que la siguiente ronda del ciclo sea en d=2 o lo que vendria siendo
+      //la casilla numero 2
+    d=d+1
+  //aqui se cierra el ciclo, pero recuerda, el ciclo se repetira hasta que se incumpla
+  //la condicion de que d sea menor o igual a x
+  FinMientras  
+  //este es simplemente un mensaje para mostrar el vector podria eliminarse sin priblemas
+  //e ir directo al ciclo de impresion
+  Imprimir "los valores del vector son: (pulsa enter por favor)"
+  Leer z
+  //esta nueva variable al igual que la anterior (d) sirve para incializar el vector
+  //en la casilla 1 del nuevo vector
+  r=1
+  //la nueva condicion hara de nuevo el limite del tamaño de las casillas es decir
+  //r va a ser la casilla 1 y x dira cual es la casilla final y recordemos que es un
+  // ciclo, por lo cual, iremos de la casilla 1 (r) a hasta la casilla final (x)
+  //pasando de uno en uno por las casillas hasta llegar a x
+  mientras r<=x Hacer
+    //al piner imprimir junto con el vector hara que se impriman las casillas del vector
+    //una por una hasta acabar el ciclo
+    imprimir vector[r]
+    //de igual forma como con d, este proceso hace que se cambie de casilla, por ejemplo
+    //de casilla 1 a la casilla 2 de uno en uno hasta la casilla x
+    r=r+1
+  //aqui de nuevo termina el ciclo
+  FinMientras
+//y aqui termina el algoritmo de como se crea un vector unidimensional
+FinAlgoritmo
