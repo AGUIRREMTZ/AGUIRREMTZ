@@ -1,0 +1,55 @@
+Algoritmo matrizBidimensional
+  //los principales imprimmir y leer como su nombre lo dice es para definir el tamaño de la matriz
+  Imprimir "ingresa el numero de columnas de la matriz"
+  leer c
+  Imprimir "ingresa el numero de filas de la matriz"
+  leer r
+  //como en la matri simple o unidimensional, la variable e=1 indica que iniciaremos
+  //la matriz en la casilla 1 de la fila 1
+  e=1
+  //usando "dimension" al igual que el anterior ejemplom, sirve para declarar que los
+  //datos ingresados seran acomodadoes con forma de matriz
+  //si se puede ver las c¡variables r c representan a "y" y "x" respectivamente y asi
+  //es como deberan escribirse siempre las variables, primero la que representa "y" seguida de la que represente a "x"
+  dimension matriz[r,c]
+  //la condicion mientras y usando la variable "e" y terminara en "r"(recordemos que "r")
+  //es la posicion en Y o bien, las filas
+  mientras (e<=r)
+    //la segunda variable si se ve bien esta condicionada con "c" y viene siendo las calumnas
+    //es decir si la anterior nos indica que inciaremos en la casilla 1 de las filas, esta nueva
+    //nos indica que iniciaremos en la casilla 1 de las columas, es decir en la casilla 1-1
+    
+    m=1
+    mientras (m<=c)
+      //como su nombre indica esta operacion ira guardando valores casilla por casilla
+      imprmir "ingrese el valor que se guardara en la casilla ===>" e "-" m
+      //la matriz ahora usa a e y a m que son las variables condicionadas por nuestros valores iniciales
+      leer matriz[e,m]
+      //como ya se mensiono, m es para las columnas, es decir este aumento de +1 es para cambiar
+      //entre columna 1 y 2 asi hasta llegar a nustro limite
+      m=m+1
+    //aqui terminara el ciclo si es que se cumple la condicion, y la condicion es para llenar la primera fila,
+    //es decir cuando se llene la primer fila se pasara al siguiente paso
+    FinMientras
+    //aqui se aumenta e que representa la fila, es decir cuando se llene la fila 1, al sumarle
+    //+1 en las filas hara que se pase de la fila 1 a la fila 2
+    e=e+1
+  //aqui se terminara el ciclo cuando se cumplan ambas condiociones, es decir cuando se llene 
+  //por completo la matriz
+  FinMientras
+  //si se pone atencion este nuevo ciclo es como el anterior, solo que este, sirve especificamente
+  //para imprmir la matri ya creada
+  s=1
+  mientras (s<=r)
+    n=1
+    mientras (n<=c)
+      escribir sin saltar matriz[s,n] " "
+      n=n+1
+    FinMientras
+    s=s+1
+    escribir con salto
+  FinMientras
+FinAlgoritmo
+
+
+    
