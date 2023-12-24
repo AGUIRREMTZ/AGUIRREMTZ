@@ -1,0 +1,26 @@
+Algoritmo ejercicioSumaCuadratica
+    //definimos las variables como enteros, es decir, le indicamos al "codigo" que los
+    //valores que guardaran las variables son numeros
+		Definir n, x, m, z Como Entero
+		Escribir "Ingrese un número: "
+    //ingresamos el numero que cumplira la formula x2=z2+m2
+		Leer n
+    //mostramos el mensaje que deseemos colocar
+		Escribir "Números que cumplen con la fórmula x² = m² + z² dentro del rango de 1 a el numero ingresado son"
+    //se colocan las condicones donde las letras de la formula x,m,z seran condicionadas 
+    //por el numero que ingresamos y se guardo en "n"
+		Para x = 1 Hasta n Hacer
+			Para m = 1 Hasta n Hacer
+				Para z = 1 Hasta n Hacer
+          //colocamos una condicion mas, en donde basicamente le decimos que queremos que se cumpla la formula
+          //x2=z2+m2 
+					Si x*x = m*m + z*z Entonces
+            //aqui mandamos a que imprmia el mensaje final el cual tendra la respues a la formula
+						Escribir "x=", x, ", m=", m, ", z=", z
+					FinSi
+				FinPara
+			FinPara
+		FinPara
+    //se cierran todos los "para" para indicar que se cierren los ciclos cuando se incumpla la condicion
+    //y por ultimo como siempre cerramos el algoritmo
+FinAlgoritmo
