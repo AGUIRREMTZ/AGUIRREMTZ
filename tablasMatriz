@@ -1,0 +1,29 @@
+Algoritmo tablasMatriz
+  //aqui solicitaremos hasta que tabla se desea obtener la impresion
+  imprimir "dame el numero para las tablas de multiplicar"
+  //este dato se guardara en "r"
+  leer r
+  e<-1
+  c<-r
+  //definimos la matriz donde r sera el eje "y" y c sera "x"
+  dimension matriz[r,c]
+  //aqui se definiran los tamaños de "x" y "y" tomando en cuenta a r
+  mientras (e<=r)
+    m<-1
+    mientras (m<=c)
+      matriz[e,m]<-e*m
+      m<-m+1
+    FinMientras
+      e<-e+1		
+  FinMientras
+   s<-1
+  mientras (s<=r)
+    n<-1
+    mientras (n<=c)
+      escribir sin saltar matriz[s,n] " "
+      n<-n+1
+    FinMientras
+    s<-s+1
+    Escribir con salto
+  FinMientras
+FinAlgoritmo
