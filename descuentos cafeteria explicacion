@@ -1,0 +1,27 @@
+//se importa el package que se usara en este caso
+import java.util.scanner;
+//en public class se coloca el nombre del proyecto, en este caso es el que se le pusera a la hora de crearlo
+public class CafeteriaDescuentos{
+  //conocido como el metodo principal, lo necesitas en todo codigo de java, de otra manera el codigo no va a correr
+	public static void main(string [ ] desc){
+    //System.out.println sirve como el equivalente d pseint de "imprimir"
+		System.out.println("Bienvenidos a la cafeteria");
+		System.out.println("Por favor saca una pelota (verde, roja, blanca) e ingresa cual obtuviste");
+    //a continuacion se colocan las opciones, ya indicamos que se deven ingresar los colores correspondientes
+      //a continuacion se hacen os casos para cada color y asi se ejecute el necesario de acuerdo al color ingresado
+		if ("verde")
+			desc=0.20;
+		}else if ("roja"){
+			desc=0.05;
+		}else if  ("blanca"){
+			desc=0.12;
+    //este ultimo caso es por si se ingresa un color no valido (color que no sea alguno de las opciones sugeridas)
+    //asi como tambien si esta mal escrito
+		}else{
+			System.out.println("No obtuviste descuento");
+		}
+		if (desc>0){
+      //aqui se manda la impresion con el resultado final
+			System.out.println("has ganado un descuento de"+((desc*comp)/100)
+		}
+		
