@@ -1,0 +1,27 @@
+//se importa el package que se usara, en este caso sera joption
+import javax.swing.JOptionPane;
+//como ya mencionamos antes el public clas se llamara como se llame el proyecto, en este caso vac
+public class vac {
+    //se declara el metodo principal
+    public static void main(String[] args) {
+        //con eso se crea un mensaje de imprecion y de lectura, es decir se deja que se 
+        //ingrese un mensaje el cual se leera para las opciones
+        String respuesta = JOptionPane.showInputDialog("¿Ya has vacunado a tu mascota antes? (si/no)");
+      //aqui se muestan los cases que seleccionara el cpdigo dependiendo del mensaje ingresado
+        if (respuesta.equalsIgnoreCase("si")) {
+            String vacuna = JOptionPane.showInputDialog("Ingrese el nombre de la vacuna (parvovirus, moquillo, rabia):");
+            
+            if (vacuna.equalsIgnoreCase("parvovirus")) {
+                JOptionPane.showMessageDialog(null, "Aplicar vacuna contra moquillo");
+            } else if (vacuna.equalsIgnoreCase("moquillo")) {
+                JOptionPane.showMessageDialog(null, "Aplicar vacuna contra Rabia");
+            } else if (vacuna.equalsIgnoreCase("rabia")) {
+              //en caso de tener todas las vacunas se mostrara este mensaje
+                JOptionPane.showMessageDialog(null, "Felicidades terminaste el plan de vacunacion :D.");
+            }
+              //en caso de que no cuente con ninguna se mostrara este otro mensaje
+        } else if (respuesta.equalsIgnoreCase("no")) {
+            JOptionPane.showMessageDialog(null, "Aplique la vacuna contra parvovirus.");
+        }
+    }
+}
