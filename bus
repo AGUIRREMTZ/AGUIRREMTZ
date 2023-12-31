@@ -1,0 +1,23 @@
+import javax.swing.JOptionPane;
+
+public class Bus {
+    public static void main(String[] args) {
+
+        String idCliente = JOptionPane.showInputDialog("Ingrese el ID del cliente:");
+  
+        short kilometrosRecorridos = Short.parseShort(JOptionPane.showInputDialog("Ingrese la cantidad de kilómetros recorridos:"));
+        
+        float puntosPorKilometro = 0;
+        
+        if (kilometrosRecorridos <= 100) {
+            puntosPorKilometro = (float) (kilometrosRecorridos*1.0);
+        } else if (kilometrosRecorridos <= 180) {
+            puntosPorKilometro = (float) ((kilometrosRecorridos-100)*1.5+100);
+        } else if (kilometrosRecorridos <= 250) {
+            puntosPorKilometro = (float) ((kilometrosRecorridos-180)*2.0+220);
+        } 
+        float saldo = (puntosPorKilometro/10);
+
+        JOptionPane.showMessageDialog(null, "ID del cliente: " + idCliente + "\nKilómetros recorridos: " + kilometrosRecorridos + "\nPuntos acumulados: " + puntosPorKilometro + "\ncredito acumulados: $" + saldo );
+    }
+}
