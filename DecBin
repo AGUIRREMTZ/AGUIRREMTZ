@@ -1,0 +1,28 @@
+import javax.swing.JOptionPane;
+
+public class DecBin {
+    public static void main(String[] args) {
+        
+        int numeroDecimal = Integer.parseInt(JOptionPane.showInputDialog("Ingresa un número decimal:"));
+
+        String numeroBinario = decimalABinario(numeroDecimal);
+
+        JOptionPane.showMessageDialog(null, "El número decimal " + numeroDecimal + " en binario es: " + numeroBinario);
+    }
+
+    public static String decimalABinario(int decimal) {
+        if (decimal == 0) {
+            return "0";
+        }
+        
+        StringBuilder binario = new StringBuilder();
+        
+        while (decimal > 0) {
+            int residuo = decimal % 2;
+            binario.insert(0, residuo);
+            decimal /= 2;
+        }
+        
+        return binario.toString();
+    }
+}
