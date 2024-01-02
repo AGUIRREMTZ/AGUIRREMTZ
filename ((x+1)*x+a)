@@ -1,0 +1,23 @@
+
+package cesar_alejandro_u3_3102;
+
+import javax.swing.JOptionPane;
+
+
+public class Cambio {
+    public static void main(String[] args) {
+        byte b=0;
+        byte x;
+        byte a=0;
+        x=Byte.parseByte(JOptionPane.showInputDialog("ingrese un numero"));
+        while (x>0){
+            
+            x=(byte) (x-2);
+            a=(byte) ((x+1)*x+a);
+            b=(byte) (a+b);                        
+        }
+        JOptionPane.showMessageDialog(null,"El resultado es"+b);
+    }
+    
+}
+
