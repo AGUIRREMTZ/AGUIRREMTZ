@@ -1,0 +1,26 @@
+package cesar_alejandro_u3_3102;
+import java.util.Scanner;
+public class Arena {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Ingrese el tamaño de la figura (debe ser un número impar): ");
+        int size = scanner.nextInt();
+        if (size % 2 == 0) {
+            System.out.println("El tamaño debe ser un número impar para crear la figura deseada.");
+            scanner.close();
+            return;
+        }      
+        for (int i = 1; i <= size; i++) {
+            for (int j = 1; j <= size; j++) {
+               
+                if (j <= i && j <= size - i + 1 || j >= i && j >= size - i + 1) {
+                    System.out.print("* ");
+                } else {
+                    System.out.print("  ");
+                }
+            }
+            System.out.println(); 
+        }
+        scanner.close();
+    }
+}
