@@ -1,0 +1,19 @@
+package cesar_alejandro_u4_3102;
+import javax.swing.JOptionPane;
+public class Arreglotarea {
+    public static void main (String[] args){
+        int x, sumat=0, prom;
+        byte calculo[]= new byte [5];
+                for (x=0;x<5;x++){
+                    calculo[x]=Byte.parseByte(JOptionPane.showInputDialog("ingrese lacalificacion de la unidad " +(x+1)));
+                    System.out.print("u"+(x+1) +"  ");
+                }
+                System.out.println("prom");
+                for(x=0; x<5; x++){
+                    System.out.print(calculo[x]+ "   ");
+                    sumat+=calculo[x];
+                }
+                prom=sumat/x;
+                System.out.println(prom);
+    }
+}
