@@ -1,0 +1,29 @@
+package cesar_alejandro_u4_3102;
+import javax.swing.JOptionPane;
+public class Calificaciones {
+    public static void main(String[] args) {
+        String[] materias = {"cal.dif ", "mat.dis ", "ingles  ", "quimica ", "fun.pro ", "fun.inv ", "des.sus "};
+        String[] unidades = {"U1", "U2", "U3", "U4", "U5"};
+        int[][] calificaciones = new int[materias.length][unidades.length];
+        System.out.print("Materias ");
+        for (String unidad : unidades) {
+            System.out.print(unidad + "  ");
+        }
+        System.out.println("Promedio");
+        int sumaPromedios = 0;
+        for (int i = 0; i < materias.length; i++) {
+            System.out.print(materias[i] + " ");
+            int suma = 0;
+            for (int j = 0; j < unidades.length; j++) {
+                calificaciones[i][j] = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la calificación de " + materias[i] + " en " + unidades[j]));
+                System.out.print(calificaciones[i][j] + "   ");
+                suma += calificaciones[i][j];
+            }      
+            int promedio = suma / unidades.length;
+            sumaPromedios += promedio;
+            System.out.println(promedio);
+        }
+        int promedioGeneral = sumaPromedios / materias.length;
+        System.out.println("Promedio General: " + promedioGeneral);
+    }
+}
