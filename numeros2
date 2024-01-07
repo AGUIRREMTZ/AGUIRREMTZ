@@ -1,0 +1,17 @@
+import javax.swing.JOptionPane;
+public class Numeros2 {
+    public static void main(String[] args) {
+        int x,a,b,c,d = 0, e;
+        x=Integer.parseInt(JOptionPane.showInputDialog("ingrese un numero"));
+        a=x;
+        while (x>=2){          
+            x=(int) (x-2);   
+            b=(int) (x+1);     
+            e=(int) (x+a);    
+            c=(int) (e+d);    
+            d=(int) (c*b);   
+            a= (int) (a-a);          
+        }       
+        JOptionPane.showMessageDialog(null,"El resultado es"+d);
+    }    
+}
