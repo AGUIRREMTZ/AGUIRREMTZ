@@ -1,0 +1,29 @@
+package cesar_alejandro_u3_3102;
+import java.util.Scanner;
+public class Rel {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Ingrese el tamaño del reloj de arena (debe ser un número impar mayor o igual a 3): ");
+        int relSize = scanner.nextInt();
+        rel(relSize);
+    }
+
+    private static void rel(int size) {
+        if (size < 3 || size % 2 != 1) {
+            System.out.println("El tamaño del reloj de arena debe ser un número impar mayor o igual a 3.");
+            return;
+        }
+
+        // Imprimir el reloj de arena de forma horizontal
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (i == 0 || i == size - 1 || j == i || j == size - i - 1 || j == 0 || j == size - 1) {
+                    System.out.print("*");
+                } else {
+                    System.out.print(" ");
+                }
+            }
+            System.out.println();
+        }
+    }
+}
