@@ -1,0 +1,18 @@
+public class UsoMetodos {
+    private int x=10;
+    public static void main(String[] args){
+        System.out.println("Hola mundo");
+        System.out.println(objeto.calcular( ));
+    }
+    private void imprimir(){
+        System.out.println(x);
+        UsoMetodos objeto = new UsoMetodos(); //creando objeto
+        // Clase    objeto=new  contructor
+        objeto.imprimir(); //llamando metodo imprimir
+    }  
+    private byte calcular(){
+        byte res;
+        res=(byte)(x*10);
+        return res;
+    }
+}
