@@ -1,0 +1,28 @@
+package metodos;
+import javax.swing.JOptionPane;
+public class Metodos {
+    private int c =10;
+    public static void main(String[] args) {
+      System.out.println("Hola Mundo");
+      Metodos objeto = new Metodos();//creando objeto
+      //clase    objeto   new constuctor
+      objeto.imprimir();//llamando al metodo imprimir
+      short anioNac;
+      //System.out.println(objeto.calcular());
+    }
+    private void imprimir (){
+    short anioNac;
+    anioNac=Short.parseShort(JOptionPane.showInputDialog("ingresa año de nacimiento"));
+    System.out.println(calcular(anioNac));
+    calcular(anioNac);//llamando al metodo calcular
+    System.out.println(c); 
+    }
+    private int calcular(int m) {
+        int edad;
+        edad=2024-m;
+        return edad;
+        //byte res;
+       //res=(byte)(c*10 );
+      // return res;
+    }
+}
