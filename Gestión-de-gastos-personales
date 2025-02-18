@@ -1,0 +1,36 @@
+class GestionGastos:
+    def __init__(self):
+        self.gastos = []
+
+    def agregar_gasto(self, categoria, monto):
+        self.gastos.append({"categoria": categoria, "monto": monto})
+        print(f"Gasto agregado: {categoria} - ${monto:.2f}")
+
+    def mostrar_gastos(self):
+        if not self.gastos:
+            print("No hay gastos registrados.")
+            return
+        
+        print("\nLista de gastos:")
+        for gasto in self.gastos:
+            print(f"{gasto['categoria']} - ${gasto['monto']:.2f}")
+
+    def total_por_categoria(self):
+        resumen = {}
+        for gasto in self.gastos:
+            if gasto["categoria"] in resumen:
+                resumen[gasto["categoria"]] += gasto["monto"]
+            else:
+                resumen[gasto["categoria"]] = gasto["monto"]
+
+        print("\nTotal gastado por categoría:")
+        for categoria, total in resumen.items():
+            print(f"{categoria}: ${total:.2f}")
+
+# Ejemplo de uso
+gestion = GestionGastos()
+gestion.agregar_gasto("Comida", 15.5)
+gestion.agregar_gasto("Transporte", 8.0)
+gestion.agregar_gasto("Comida", 12.3)
+gestion.mostrar_gastos()
+gestion.total_por_categoria()
