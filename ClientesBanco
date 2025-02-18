@@ -1,0 +1,35 @@
+from collections import deque
+
+class SistemaTurnos:
+    def __init__(self):
+        self.fila = deque()
+        self.contador_turnos = 1
+
+    def tomar_turno(self, nombre):
+        turno = f"T-{self.contador_turnos}"
+        self.fila.append((turno, nombre))
+        self.contador_turnos += 1
+        print(f"{nombre} ha tomado el turno {turno}.")
+
+    def atender_cliente(self):
+        if self.fila:
+            turno, nombre = self.fila.popleft()
+            print(f"Atendiendo a {nombre} con turno {turno}.")
+        else:
+            print("No hay clientes en la fila.")
+
+    def estado_fila(self):
+        if self.fila:
+            print("Clientes en espera:")
+            for turno, nombre in self.fila:
+                print(f"{turno} - {nombre}")
+        else:
+            print("No hay clientes en espera.")
+
+# Ejemplo de uso
+sistema = SistemaTurnos()
+sistema.tomar_turno("Juan")
+sistema.tomar_turno("Ana")
+sistema.estado_fila()
+sistema.atender_cliente()
+sistema.estado_fila()
