@@ -1,0 +1,29 @@
+import random
+import string
+
+def generar_contrasena(longitud=12):
+    caracteres = string.ascii_letters + string.digits + string.punctuation
+    return ''.join(random.choice(caracteres) for _ in range(longitud))
+
+def validar_contrasena(contrasena):
+    tiene_mayuscula = any(c.isupper() for c in contrasena)
+    tiene_minuscula = any(c.islower() for c in contrasena)
+    tiene_numero = any(c.isdigit() for c in contrasena)
+    tiene_especial = any(c in string.punctuation for c in contrasena)
+
+    if len(contrasena) >= 8 and tiene_mayuscula and tiene_minuscula and tiene_numero and tiene_especial:
+        return True
+    return False
+
+# Generar una contraseña aleatoria
+contrasena_generada = generar_contrasena()
+print(f"Contraseña generada: {contrasena_generada}")
+
+# Solicitar al usuario una contraseña para validación
+contrasena_usuario = input("Ingrese una contraseña para validar: ")
+
+# Verificar si es segura
+if validar_contrasena(contrasena_usuario):
+    print("La contraseña es segura.")
+else:
+    print("La contraseña no cumple con los requisitos de seguridad.")
