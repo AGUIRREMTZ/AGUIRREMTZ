@@ -1,0 +1,43 @@
+class CajeroAutomatico:
+    def __init__(self, saldo_inicial=1000):
+        self.saldo = saldo_inicial
+
+    def mostrar_saldo(self):
+        print(f"Saldo actual: ${self.saldo:.2f}")
+
+    def depositar(self, monto):
+        if monto > 0:
+            self.saldo += monto
+            print(f"Depósito exitoso: ${monto:.2f}")
+        else:
+            print("El monto debe ser mayor a 0.")
+
+    def retirar(self, monto):
+        if monto > self.saldo:
+            print("Fondos insuficientes.")
+        elif monto > 0:
+            self.saldo -= monto
+            print(f"Retiro exitoso: ${monto:.2f}")
+        else:
+            print("El monto debe ser mayor a 0.")
+
+# Simulación de uso
+cajero = CajeroAutomatico()
+
+while True:
+    print("\n1. Consultar saldo\n2. Depositar\n3. Retirar\n4. Salir")
+    opcion = input("Seleccione una opción: ")
+
+    if opcion == "1":
+        cajero.mostrar_saldo()
+    elif opcion == "2":
+        monto = float(input("Ingrese el monto a depositar: "))
+        cajero.depositar(monto)
+    elif opcion == "3":
+        monto = float(input("Ingrese el monto a retirar: "))
+        cajero.retirar(monto)
+    elif opcion == "4":
+        print("Gracias por usar el cajero automático.")
+        break
+    else:
+        print("Opción inválida. Intente de nuevo.")
