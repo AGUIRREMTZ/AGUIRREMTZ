@@ -1,0 +1,63 @@
+import os
+
+class ListaDeTareas:
+    def __init__(self, archivo="tareas.txt"):
+        self.archivo = archivo
+        self.tareas = self.cargar_tareas()
+
+    def cargar_tareas(self):
+        if os.path.exists(self.archivo):
+            with open(self.archivo, "r") as f:
+                return [line.strip() for line in f.readlines()]
+        return []
+
+    def guardar_tareas(self):
+        with open(self.archivo, "w") as f:
+            for tarea in self.tareas:
+                f.write(tarea + "\n")
+
+    def agregar_tarea(self, tarea):
+        self.tareas.append(tarea)
+        self.guardar_tareas()
+        print(f"Tarea agregada: {tarea}")
+
+    def mostrar_tareas(self):
+        if not self.tareas:
+            print("No hay tareas pendientes.")
+        else:
+            print("\nLista de tareas:")
+            for i, tarea in enumerate(self.tareas, 1):
+                print(f"{i}. {tarea}")
+
+    def eliminar_tarea(self, numero):
+        if 1 <= numero <= len(self.tareas):
+            tarea_eliminada = self.tareas.pop(numero - 1)
+            self.guardar_tareas()
+            print(f"Tarea eliminada: {tarea_eliminada}")
+        else:
+            print("Número de tarea inválido.")
+
+# Simulación de uso
+lista = ListaDeTareas()
+
+while True:
+    print("\n1. Ver tareas\n2. Agregar tarea\n3. Eliminar tarea\n4. Salir")
+    opcion = input("Seleccione una opción: ")
+
+    if opcion == "1":
+        lista.mostrar_tareas()
+    elif opcion == "2":
+        tarea = input("Ingrese la nueva tarea: ")
+        lista.agregar_tarea(tarea)
+    elif opcion == "3":
+        lista.mostrar_tareas()
+        try:
+            num = int(input("Ingrese el número de la tarea a eliminar: "))
+            lista.eliminar_tarea(num)
+        except ValueError:
+            print("Debe ingresar un número válido.")
+    elif opcion == "4":
+        print("Saliendo del gestor de tareas.")
+        break
+    else:
+        print("Opción inválida. Intente de nuevo.")
