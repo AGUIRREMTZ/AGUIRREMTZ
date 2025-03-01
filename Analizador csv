@@ -1,0 +1,64 @@
+import csv
+
+class AnalizadorCSV:
+    def __init__(self, archivo):
+        self.archivo = archivo
+        self.datos = self.cargar_datos()
+
+    def cargar_datos(self):
+        try:
+            with open(self.archivo, newline='', encoding="utf-8") as f:
+                lector = csv.reader(f)
+                datos = [fila for fila in lector]
+                return datos
+        except FileNotFoundError:
+            print("Error: El archivo no existe.")
+            return []
+
+    def mostrar_encabezados(self):
+        if self.datos:
+            print("\nEncabezados:", ", ".join(self.datos[0]))
+        else:
+            print("No hay datos cargados.")
+
+    def mostrar_filas(self, n=5):
+        print(f"\nMostrando las primeras {n} filas:")
+        for fila in self.datos[1:n+1]:  # Omitimos la primera fila (encabezados)
+            print(", ".join(fila))
+
+    def filtrar_por_columna(self, columna, valor):
+        if not self.datos:
+            print("No hay datos cargados.")
+            return
+        
+        try:
+            indice = self.datos[0].index(columna)
+            filtrados = [fila for fila in self.datos[1:] if fila[indice] == valor]
+            print(f"\nResultados para {columna} = {valor}:")
+            for fila in filtrados:
+                print(", ".join(fila))
+        except ValueError:
+            print(f"La columna '{columna}' no existe.")
+
+# Uso del programa
+archivo_csv = "datos.csv"  # Asegúrate de tener un archivo CSV válido
+analizador = AnalizadorCSV(archivo_csv)
+
+while True:
+    print("\n1. Ver encabezados\n2. Mostrar filas\n3. Filtrar por columna\n4. Salir")
+    opcion = input("Seleccione una opción: ")
+
+    if opcion == "1":
+        analizador.mostrar_encabezados()
+    elif opcion == "2":
+        n = int(input("¿Cuántas filas desea ver?: "))
+        analizador.mostrar_filas(n)
+    elif opcion == "3":
+        columna = input("Ingrese el nombre de la columna: ")
+        valor = input("Ingrese el valor a filtrar: ")
+        analizador.filtrar_por_columna(columna, valor)
+    elif opcion == "4":
+        print("Saliendo del programa.")
+        break
+    else:
+        print("Opción inválida.")
