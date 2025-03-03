@@ -1,0 +1,19 @@
+import requests
+from bs4 import BeautifulSoup
+
+def extraer_titulos(url):
+    respuesta = requests.get(url)
+    
+    if respuesta.status_code == 200:
+        sopa = BeautifulSoup(respuesta.text, 'html.parser')
+        titulos = sopa.find_all('h2')  # Extrae los títulos que están dentro de etiquetas <h2>
+        
+        print("\nTítulos encontrados:")
+        for i, titulo in enumerate(titulos, 1):
+            print(f"{i}. {titulo.text.strip()}")
+    else:
+        print(f"Error al acceder a la página. Código: {respuesta.status_code}")
+
+# URL de prueba (debes reemplazarla con una que contenga <h2>)
+url = "https://example.com"  # Reemplázala con una página real que tenga artículos
+extraer_titulos(url)
