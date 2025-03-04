@@ -1,0 +1,29 @@
+import requests
+import os
+from concurrent.futures import ThreadPoolExecutor
+
+# Lista de URLs de imágenes (cambia estas por imágenes reales)
+imagenes = [
+    "https://via.placeholder.com/300.png",
+    "https://via.placeholder.com/400.png",
+    "https://via.placeholder.com/500.png"
+]
+
+# Carpeta donde se guardarán las imágenes
+directorio = "imagenes_descargadas"
+os.makedirs(directorio, exist_ok=True)
+
+def descargar_imagen(url):
+    nombre_archivo = os.path.join(directorio, url.split("/")[-1])
+    
+    respuesta = requests.get(url)
+    if respuesta.status_code == 200:
+        with open(nombre_archivo, "wb") as f:
+            f.write(respuesta.content)
+        print(f"Imagen descargada: {nombre_archivo}")
+    else:
+        print(f"Error al descargar {url}")
+
+# Descarga en paralelo
+with ThreadPoolExecutor(max_workers=3) as ejecutor:
+    ejecutor.map(descargar_imagen, imagenes)
