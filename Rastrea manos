@@ -1,0 +1,39 @@
+import cv2
+import mediapipe as mp
+
+# Inicializar MediaPipe Hands
+mp_manos = mp.solutions.hands
+mp_dibujo = mp.solutions.drawing_utils
+
+# Configuración del detector de manos
+manos = mp_manos.Hands(min_detection_confidence=0.5, min_tracking_confidence=0.5)
+
+# Capturar video en tiempo real
+video = cv2.VideoCapture(0)
+
+while True:
+    ret, frame = video.read()
+    if not ret:
+        break
+
+    # Convertir a RGB (MediaPipe usa RGB en lugar de BGR)
+    frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    
+    # Procesar la imagen con MediaPipe
+    resultado = manos.process(frame_rgb)
+
+    if resultado.multi_hand_landmarks:
+        for mano in resultado.multi_hand_landmarks:
+            # Dibujar puntos de referencia en la mano
+            mp_dibujo.draw_landmarks(frame, mano, mp_manos.HAND_CONNECTIONS)
+
+    # Mostrar el resultado
+    cv2.imshow("Detección de Manos", frame)
+
+    # Salir con la tecla 'q'
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Liberar recursos
+video.release()
+cv2.destroyAllWindows()
