@@ -1,0 +1,43 @@
+import speech_recognition as sr
+import pyttsx3
+
+# Inicializar el reconocimiento de voz y el sintetizador de voz
+reconocedor = sr.Recognizer()
+sintetizador = pyttsx3.init()
+
+# Función para convertir texto en voz
+def hablar(texto):
+    sintetizador.say(texto)
+    sintetizador.runAndWait()
+
+# Función para reconocer comandos de voz
+def escuchar_comando():
+    with sr.Microphone() as fuente:
+        print("Escuchando...")
+        reconocedor.adjust_for_ambient_noise(fuente)  # Ajusta el ruido ambiente
+        try:
+            audio = reconocedor.listen(fuente, timeout=5)  # Escucha por 5 segundos
+            texto = reconocedor.recognize_google(audio, language="es-ES")
+            return texto.lower()
+        except sr.UnknownValueError:
+            return "No entendí"
+        except sr.RequestError:
+            return "Error en el servicio de reconocimiento"
+
+# Ciclo principal del asistente
+while True:
+    comando = escuchar_comando()
+    print("Usuario dijo:", comando)
+
+    if "salir" in comando:
+        hablar("Saliendo del programa")
+        break
+    elif "hola" in comando:
+        hablar("Hola, ¿cómo estás?")
+    elif "hora" in comando:
+        from datetime import datetime
+        hora_actual = datetime.now().strftime("%H:%M")
+        hablar(f"La hora actual es {hora_actual}")
+    else:
+        hablar("No reconozco ese comando")
+
