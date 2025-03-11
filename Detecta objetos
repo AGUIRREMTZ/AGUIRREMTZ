@@ -1,0 +1,68 @@
+import cv2
+import numpy as np
+
+# Cargar el modelo YOLO preentrenado
+net = cv2.dnn.readNet("yolov3.weights", "yolov3.cfg")
+
+# Cargar las clases de COCO (nombres de objetos que YOLO puede detectar)
+with open("coco.names", "r") as f:
+    clases = [linea.strip() for linea in f.readlines()]
+
+# Obtener las capas de salida del modelo
+capas_salida = net.getUnconnectedOutLayersNames()
+
+# Capturar video en tiempo real desde la cámara
+video = cv2.VideoCapture(0)
+
+while True:
+    ret, frame = video.read()
+    if not ret:
+        break
+
+    altura, ancho = frame.shape[:2]
+
+    # Preparar la imagen para YOLO
+    blob = cv2.dnn.blobFromImage(frame, 1/255.0, (416, 416), swapRB=True, crop=False)
+    net.setInput(blob)
+    
+    # Obtener las detecciones
+    detecciones = net.forward(capas_salida)
+
+    cajas = []
+    confianzas = []
+    clases_detectadas = []
+
+    for salida in detecciones:
+        for deteccion in salida:
+            puntajes = deteccion[5:]
+            clase_id = np.argmax(puntajes)
+            confianza = puntajes[clase_id]
+            
+            if confianza > 0.5:  # Filtrar detecciones con confianza baja
+                centro_x, centro_y, w, h = (deteccion[:4] * [ancho, altura, ancho, altura]).astype(int)
+                x = int(centro_x - w / 2)
+                y = int(centro_y - h / 2)
+
+                cajas.append([x, y, w, h])
+                confianzas.append(float(confianza))
+                clases_detectadas.append(clase_id)
+
+    # Aplicar Non-Maximum Suppression (NMS) para eliminar cajas redundantes
+    indices = cv2.dnn.NMSBoxes(cajas, confianzas, 0.5, 0.4)
+
+    for i in indices.flatten():
+        x, y, w, h = cajas[i]
+        clase = clases[clases_detectadas[i]]
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        cv2.putText(frame, f"{clase}: {confianzas[i]:.2f}", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+    # Mostrar el resultado
+    cv2.imshow("Detección de Objetos", frame)
+
+    # Salir con la tecla 'q'
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Liberar recursos
+video.release()
+cv2.destroyAllWindows()
