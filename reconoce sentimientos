@@ -1,0 +1,28 @@
+import cv2
+import numpy as np
+from keras.models import load_model
+
+# Cargar el modelo de emociones preentrenado
+modelo_emociones = load_model("modelo_emociones.h5")
+
+# Clases de emociones según el modelo
+emociones = ["Enojado", "Disgustado", "Temeroso", "Feliz", "Neutral", "Triste", "Sorprendido"]
+
+# Cargar el clasificador de rostros de OpenCV
+clasificador_rostros = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+
+# Capturar video en tiempo real
+video = cv2.VideoCapture(0)
+
+while True:
+    ret, frame = video.read()
+    if not ret:
+        break
+
+    gris = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    
+    # Detectar rostros en la imagen
+    rostros = clasificador_rostros.detectMultiScale(gris, scaleFactor=1.3, minNeighbors=5)
+
+    for (x, y, w, h)
+      
