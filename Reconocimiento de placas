@@ -1,0 +1,63 @@
+import cv2
+import numpy as np
+import easyocr
+
+# Cargar el modelo YOLO entrenado para detectar placas de autos
+net = cv2.dnn.readNet("yolov4-placas.weights", "yolov4-placas.cfg")
+
+# Usar OpenCV para capturar video en tiempo real
+video = cv2.VideoCapture(0)
+
+# Inicializar OCR
+lector = easyocr.Reader(["en"])  # OCR en inglés
+
+while True:
+    ret, frame = video.read()
+    if not ret:
+        break
+
+    altura, ancho = frame.shape[:2]
+
+    # Preparar la imagen para YOLO
+    blob = cv2.dnn.blobFromImage(frame, 1/255.0, (416, 416), swapRB=True, crop=False)
+    net.setInput(blob)
+
+    # Obtener detecciones de placas
+    capas_salida = net.getUnconnectedOutLayersNames()
+    detecciones = net.forward(capas_salida)
+
+    placas_detectadas = []
+
+    for salida in detecciones:
+        for deteccion in salida:
+            puntajes = deteccion[5:]
+            clase_id = np.argmax(puntajes)
+            confianza = puntajes[clase_id]
+            
+            if confianza > 0.5:  # Filtrar detecciones poco confiables
+                centro_x, centro_y, w, h = (deteccion[:4] * [ancho, altura, ancho, altura]).astype(int)
+                x = int(centro_x - w / 2)
+                y = int(centro_y - h / 2)
+
+                placas_detectadas.append((x, y, w, h))
+
+    # Procesar las placas detectadas con OCR
+    for (x, y, w, h) in placas_detectadas:
+        placa_recortada = frame[y:y + h, x:x + w]
+        texto_placa = lector.readtext(placa_recortada, detail=0)
+        
+        # Dibujar rectángulo alrededor de la placa y mostrar el texto detectado
+        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        cv2.putText(frame, " ".join(texto_placa), (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
+
+    # Mostrar la imagen con las placas detectadas
+    cv2.imshow("Reconocimiento de Placas", frame)
+
+    # Salir con la tecla 'q'
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Liberar recursos
+video.release()
+cv2.destroyAllWindows()
+
