@@ -1,0 +1,57 @@
+import cv2
+import numpy as np
+import serial
+
+# Configurar comunicación con el brazo robótico vía puerto serial
+# Asegúrate de cambiar 'COM3' por el puerto correcto en tu sistema
+arduino = serial.Serial('COM3', 9600, timeout=1)
+
+# Rango de colores a detectar (en formato HSV)
+rango_colores = {
+    "rojo": ((0, 100, 100), (10, 255, 255)),
+    "verde": ((40, 40, 40), (80, 255, 255)),
+    "azul": ((100, 150, 0), (140, 255, 255))
+}
+
+# Captura de video en tiempo real
+video = cv2.VideoCapture(0)
+
+while True:
+    ret, frame = video.read()
+    if not ret:
+        break
+
+    # Convertir a espacio de color HSV
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+    for color, (lower, upper) in rango_colores.items():
+        mascara = cv2.inRange(hsv, np.array(lower), np.array(upper))
+
+        # Encontrar contornos de los objetos detectados
+        contornos, _ = cv2.findContours(mascara, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+        for contorno in contornos:
+            if cv2.contourArea(contorno) > 500:
+                x, y, w, h = cv2.boundingRect(contorno)
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                cv2.putText(frame, color, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
+
+                # Enviar comando al brazo robótico
+                if color == "rojo":
+                    arduino.write(b'1')  # Mueve el objeto rojo
+                elif color == "verde":
+                    arduino.write(b'2')  # Mueve el objeto verde
+                elif color == "azul":
+                    arduino.write(b'3')  # Mueve el objeto azul
+
+    # Mostrar la imagen procesada
+    cv2.imshow("Detección de Colores", frame)
+
+    # Salir con la tecla 'q'
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Liberar recursos
+video.release()
+cv2.destroyAllWindows()
+arduino.close()
