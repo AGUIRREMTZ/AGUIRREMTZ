@@ -1,0 +1,41 @@
+import cv2
+import numpy as np
+from keras.models import load_model
+
+# Cargar el modelo preentrenado de reconocimiento de señales de tránsito
+modelo_senales = load_model("modelo_senales.h5")
+
+# Clases de señales reconocidas por el modelo
+clases_senales = ["Alto", "Curva Peligrosa", "Límite de Velocidad", "Ceda el Paso", "Prohibido Pasar"]
+
+# Capturar video en tiempo real
+video = cv2.VideoCapture(0)
+
+while True:
+    ret, frame = video.read()
+    if not ret:
+        break
+
+    # Convertir imagen a escala de grises y redimensionarla para el modelo
+    gris = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    imagen_redimensionada = cv2.resize(gris, (64, 64))
+    imagen_redimensionada = np.expand_dims(imagen_redimensionada, axis=0)  # Agregar batch dimension
+    imagen_redimensionada = np.expand_dims(imagen_redimensionada, axis=-1)  # Agregar canal de color (1 para gris)
+
+    # Predecir la señal con la CNN
+    prediccion = modelo_senales.predict(imagen_redimensionada)
+    senal = clases_senales[np.argmax(prediccion)]  # Obtener la señal con mayor probabilidad
+
+    # Mostrar la predicción en la imagen
+    cv2.putText(frame, senal, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+    # Mostrar la imagen procesada
+    cv2.imshow("Reconocimiento de Señales", frame)
+
+    # Salir con la tecla 'q'
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Liberar recursos
+video.release()
+cv2.destroyAllWindows()
