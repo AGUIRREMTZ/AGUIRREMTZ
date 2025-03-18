@@ -1,0 +1,53 @@
+import cv2
+import numpy as np
+
+# Cargar el modelo YOLO preentrenado
+net = cv2.dnn.readNet("yolov4.weights", "yolov4.cfg")
+
+# Cargar las clases de YOLO (COCO dataset)
+with open("coco.names", "r") as f:
+    clases = f.read().strip().split("\n")
+
+# Capturar video en tiempo real
+video = cv2.VideoCapture(0)
+
+while True:
+    ret, frame = video.read()
+    if not ret:
+        break
+
+    altura, ancho = frame.shape[:2]
+
+    # Preparar la imagen para YOLO
+    blob = cv2.dnn.blobFromImage(frame, 1/255.0, (416, 416), swapRB=True, crop=False)
+    net.setInput(blob)
+
+    # Obtener detecciones
+    capas_salida = net.getUnconnectedOutLayersNames()
+    detecciones = net.forward(capas_salida)
+
+    for salida in detecciones:
+        for deteccion in salida:
+            puntajes = deteccion[5:]
+            clase_id = np.argmax(puntajes)
+            confianza = puntajes[clase_id]
+
+            if confianza > 0.5 and clases[clase_id] == "person":  # Filtrar solo personas
+                centro_x, centro_y, w, h = (deteccion[:4] * [ancho, altura, ancho, altura]).astype(int)
+                x = int(centro_x - w / 2)
+                y = int(centro_y - h / 2)
+
+                # Dibujar rectángulo alrededor de la persona detectada
+                cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+                cv2.putText(frame, "Persona", (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
+
+    # Mostrar el video con las detecciones
+    cv2.imshow("Detección de Personas", frame)
+
+    # Salir con la tecla 'q'
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Liberar recursos
+video.release()
+cv2.destroyAllWindows()
