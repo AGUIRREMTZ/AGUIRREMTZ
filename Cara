@@ -1,0 +1,76 @@
+import cv2
+import numpy as np
+import face_recognition
+import os
+from datetime import datetime
+
+# Ruta donde se almacenan las imágenes de referencia
+path = "imagenes_referencia"
+imagenes = []
+nombres = []
+
+# Cargar imágenes de referencia y extraer nombres
+for archivo in os.listdir(path):
+    img = cv2.imread(f"{path}/{archivo}")
+    imagenes.append(img)
+    nombres.append(os.path.splitext(archivo)[0])  # Extrae el nombre sin extensión
+
+# Codificar las imágenes para reconocimiento facial
+def codificar_imagenes(imagenes):
+    codificaciones = []
+    for img in imagenes:
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        codificacion = face_recognition.face_encodings(img)
+        if codificacion:  # Asegurarse de que se encontró una cara
+            codificaciones.append(codificacion[0])
+    return codificaciones
+
+codificaciones_conocidas = codificar_imagenes(imagenes)
+
+# Función para registrar asistencia en un archivo
+def registrar_asistencia(nombre):
+    with open("asistencia.csv", "a") as archivo:
+        ahora = datetime.now()
+        hora = ahora.strftime("%H:%M:%S")
+        archivo.write(f"{nombre},{hora}\n")
+
+# Captura de video en tiempo real
+video = cv2.VideoCapture(0)
+
+while True:
+    ret, frame = video.read()
+    if not ret:
+        break
+
+    # Convertir a RGB
+    rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+    # Detectar rostros en el frame
+    ubicaciones_rostros = face_recognition.face_locations(rgb_frame)
+    codificaciones_rostros = face_recognition.face_encodings(rgb_frame, ubicaciones_rostros)
+
+    for codificacion, ubicacion in zip(codificaciones_rostros, ubicaciones_rostros):
+        # Comparar con las imágenes de referencia
+        coincidencias = face_recognition.compare_faces(codificaciones_conocidas, codificacion)
+        distancias = face_recognition.face_distance(codificaciones_conocidas, codificacion)
+        mejor_match = np.argmin(distancias)
+
+        if coincidencias[mejor_match]:
+            nombre = nombres[mejor_match]
+            registrar_asistencia(nombre)  # Registrar asistencia
+
+            # Dibujar rectángulo y nombre en la imagen
+            y1, x2, y2, x1 = ubicacion
+            cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
+            cv2.putText(frame, nombre, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
+
+    # Mostrar la imagen con los reconocimientos
+    cv2.imshow("Reconocimiento Facial", frame)
+
+    # Salir con la tecla 'q'
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+# Liberar recursos
+video.release()
+cv2.destroyAllWindows()
