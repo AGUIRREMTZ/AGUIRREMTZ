@@ -1,0 +1,43 @@
+import RPi.GPIO as GPIO
+import time
+import cv2
+import telepot
+from telepot.loop import MessageLoop
+
+# Configuración del sensor PIR
+PIR_PIN = 4  # GPIO donde está conectado el sensor
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(PIR_PIN, GPIO.IN)
+
+# Configuración de la cámara
+camara = cv2.VideoCapture(0)
+
+# Token del bot de Telegram y ID del chat
+TOKEN = "TU_TOKEN_DE_TELEGRAM"
+CHAT_ID = "TU_CHAT_ID"
+bot = telepot.Bot(TOKEN)
+
+def enviar_alerta():
+    # Capturar imagen
+    ret, frame = camara.read()
+    if ret:
+        nombre_imagen = "intruso.jpg"
+        cv2.imwrite(nombre_imagen, frame)
+
+        # Enviar imagen a Telegram
+        with open(nombre_imagen, "rb") as foto:
+            bot.sendPhoto(CHAT_ID, foto, caption="¡Alerta! Movimiento detectado.")
+
+print("Sistema de seguridad activado...")
+
+try:
+    while True:
+        if GPIO.input(PIR_PIN):
+            print("¡Movimiento detectado!")
+            enviar_alerta()
+            time.sleep(10)  # Espera antes de detectar otro movimiento
+        time.sleep(1)
+except KeyboardInterrupt:
+    print("Sistema desactivado.")
+    GPIO.cleanup()
+    camara.release()
