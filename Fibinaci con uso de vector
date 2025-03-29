@@ -1,0 +1,31 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+vector<int> generarFibonacci(int n) {
+    vector<int> fib(n);
+    if (n > 0) fib[0] = 0;
+    if (n > 1) fib[1] = 1;
+    for (int i = 2; i < n; ++i) {
+        fib[i] = fib[i - 1] + fib[i - 2];
+    }
+    return fib;
+}
+
+int main() {
+    int n;
+    cout << "Ingresa la cantidad de términos de Fibonacci: ";
+    cin >> n;
+    
+    vector<int> fibonacci = generarFibonacci(n);
+    reverse(fibonacci.begin(), fibonacci.end());
+    
+    cout << "Serie de Fibonacci en orden inverso: ";
+    for (int num : fibonacci) {
+        cout << num << " ";
+    }
+    cout << endl;
+    
+    return 0;
+}
