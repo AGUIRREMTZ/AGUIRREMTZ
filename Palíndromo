@@ -1,0 +1,28 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+bool esPalindromo(const string& str) {
+    int inicio = 0, fin = str.size() - 1;
+    while (inicio < fin) {
+        if (str[inicio] != str[fin]) return false;
+        ++inicio;
+        --fin;
+    }
+    return true;
+}
+
+int main() {
+    string palabra;
+    cout << "Ingresa una palabra: ";
+    cin >> palabra;
+    
+    if (esPalindromo(palabra)) {
+        cout << "La palabra \"" << palabra << "\" es un palíndromo." << endl;
+    } else {
+        cout << "La palabra \"" << palabra << "\" no es un palíndromo." << endl;
+    }
+    
+    return 0;
+}
