@@ -1,0 +1,73 @@
+#include <iostream>
+using namespace std;
+
+// Nodo de un Árbol Binario de Búsqueda
+struct Nodo {
+    int dato;
+    Nodo* izquierda;
+    Nodo* derecha;
+    Nodo(int valor) : dato(valor), izquierda(nullptr), derecha(nullptr) {}
+};
+
+// Clase Árbol Binario de Búsqueda (ABB)
+class ArbolBinario {
+private:
+    Nodo* raiz;
+
+    Nodo* insertar(Nodo* nodo, int valor) {
+        if (!nodo) return new Nodo(valor);
+        if (valor < nodo->dato)
+            nodo->izquierda = insertar(nodo->izquierda, valor);
+        else
+            nodo->derecha = insertar(nodo->derecha, valor);
+        return nodo;
+    }
+
+    void inorden(Nodo* nodo) const {
+        if (nodo) {
+            inorden(nodo->izquierda);
+            cout << nodo->dato << " ";
+            inorden(nodo->derecha);
+        }
+    }
+
+    void liberar(Nodo* nodo) {
+        if (nodo) {
+            liberar(nodo->izquierda);
+            liberar(nodo->derecha);
+            delete nodo;
+        }
+    }
+
+public:
+    ArbolBinario() : raiz(nullptr) {}
+
+    void insertar(int valor) {
+        raiz = insertar(raiz, valor);
+    }
+
+    void mostrarInorden() const {
+        cout << "Recorrido inorden: ";
+        inorden(raiz);
+        cout << endl;
+    }
+
+    ~ArbolBinario() {
+        liberar(raiz);
+    }
+};
+
+int main() {
+    ArbolBinario arbol;
+    arbol.insertar(50);
+    arbol.insertar(30);
+    arbol.insertar(70);
+    arbol.insertar(20);
+    arbol.insertar(40);
+    arbol.insertar(60);
+    arbol.insertar(80);
+
+    arbol.mostrarInorden();
+
+    return 0;
+}
