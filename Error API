@@ -1,0 +1,5 @@
+npm ERR! code ENOENT
+npm ERR! syscall open
+npm ERR! path C:\Users\Cesar\Desktop\gestion-gastos\package.json
+npm ERR! errno -4058
+npm ERR! enoent Could not read package.json: Error: ENOENT: no such file or directory, open 'C:\Users\Cesar\Desktop\gestion-gastos\package.json'
