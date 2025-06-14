@@ -1,0 +1,93 @@
+#!/bin/bash
+
+while true; do
+    clear
+    echo "=== MENÚ DE CONFIGURACIÓN DE IPTABLES ==="
+    echo "1. Denegar ping remoto por IP"
+    echo "2. Permitir ping remoto por IP"
+    echo "3. Denegar puerto 22 por IP"
+    echo "4. Permitir puerto 22 por IP"
+    echo "5. Denegar puerto 22 por dirección MAC"
+    echo "6. Permitir puerto 22 por dirección MAC"
+    echo "7. Denegar puerto 22 por rango de IP"
+    echo "8. Permitir puerto 22 por rango de IP"
+    echo "9. Checar estado de las reglas"
+    echo "10. Salir"
+    read -p "Selecciona una opción: " opcion
+
+    case $opcion in
+        1)
+            read -p "Ingresa la IP a la que deseas denegar ping: " ip
+            iptables -A INPUT -s "$ip" -p icmp --icmp-type echo-request -j DROP
+            echo "Ping denegado a $ip"
+            ;;
+        2)
+            read -p "Ingresa la IP a la que deseas permitir ping: " ip
+            iptables -D INPUT -s "$ip" -p icmp --icmp-type echo-request -j DROP
+            echo "Ping permitido a $ip"
+            ;;
+        3)
+            read -p "Ingresa la IP a denegar en puerto 22: " ip
+            iptables -A INPUT -p tcp --dport 22 -s "$ip" -j DROP
+            echo "Acceso SSH denegado a $ip"
+            ;;
+        4)
+            read -p "Ingresa la IP a permitir en puerto 22: " ip
+            iptables -D INPUT -p tcp --dport 22 -s "$ip" -j DROP
+            echo "Acceso SSH permitido a $ip"
+            ;;
+        5)
+            read -p "Ingresa la dirección MAC a denegar en puerto 22: " mac
+            iptables -A INPUT -p tcp --dport 22 -m mac --mac-source "$mac" -j DROP
+            echo "Acceso SSH denegado a MAC $mac"
+            ;;
+        6)
+            read -p "Ingresa la dirección MAC a permitir en puerto 22: " mac
+            iptables -D INPUT -p tcp --dport 22 -m mac --mac-source "$mac" -j DROP
+            echo "Acceso SSH permitido a MAC $mac"
+            ;;
+        7)
+            read -p "Introduce el segmento de red (ej. 192.168.1): " segmento
+            read -p "Introduce la IP inicial (ej. 10): " ip_ini
+            read -p "Introduce la IP final (ej. 20): " ip_fin
+            if [ "$ip_ini" -gt "$ip_fin" ]; then
+                echo "Error: la IP inicial no puede ser mayor que la final."
+            else
+                for i in $(seq "$ip_ini" "$ip_fin"); do
+                    ip="$segmento.$i"
+                    iptables -A INPUT -p tcp --dport 22 -s "$ip" -j DROP
+                    echo "Denegado SSH desde $ip"
+                done
+            fi
+            ;;
+        8)
+            read -p "Introduce el segmento de red (ej. 192.168.1): " segmento
+            read -p "Introduce la IP inicial (ej. 10): " ip_ini
+            read -p "Introduce la IP final (ej. 20): " ip_fin
+            if [ "$ip_ini" -gt "$ip_fin" ]; then
+                echo "Error: la IP inicial no puede ser mayor que la final."
+            else
+                for i in $(seq "$ip_ini" "$ip_fin"); do
+                    ip="$segmento.$i"
+                    iptables -D INPUT -p tcp --dport 22 -s "$ip" -j DROP
+                    echo "Permitido SSH desde $ip"
+                done
+            fi
+            ;;
+        9)
+            echo "Estado actual de las reglas:"
+            /sbin/iptables -nL
+            read -p "Presiona Enter para continuar..."
+            ;;
+        10)
+            echo "Saliendo..."
+            exit 0
+            ;;
+        *)
+            echo "Opción inválida"
+            ;;
+    esac
+
+    echo ""
+    read -p "Presiona Enter para volver al menú..."
+done
