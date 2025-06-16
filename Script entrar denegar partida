@@ -1,0 +1,31 @@
+#!/bin/bash
+
+echo "=== Gestión de acceso SSH por rango de IPs ==="
+echo "1) Denegar (bloquear) rango de IPs"
+echo "2) Permitir (desbloquear) rango de IPs"
+read -p "Selecciona una opción (1 o 2): " opcion
+
+read -p "Introduce el segmento de red (ej. 192.168.1): " segmento
+read -p "Introduce la IP inicial del rango (ej. 10): " ip_ini
+read -p "Introduce la IP final del rango (ej. 20): " ip_fin
+
+if [ "$ip_ini" -gt "$ip_fin" ]; then
+    echo "Error: la IP inicial no puede ser mayor que la final."
+    exit 1
+fi
+
+for i in $(seq $ip_ini $ip_fin); do
+    ip="$segmento.$i"
+    if [ "$opcion" -eq 1 ]; then
+        echo "Denegando acceso SSH desde $ip..."
+        iptables -A INPUT -p tcp --dport 22 -s "$ip" -j DROP
+    elif [ "$opcion" -eq 2 ]; then
+        echo "Permitiendo acceso SSH desde $ip (eliminando regla)..."
+        iptables -D INPUT -p tcp --dport 22 -s "$ip" -j DROP
+    else
+        echo "Opción inválida."
+        exit 1
+    fi
+done
+
+echo "Operación completada."
