@@ -1,0 +1,93 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from tkinter import *
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from sympy import symbols, integrate, lambdify, sin, cos, pi, sympify
+
+# Ventana principal
+root = Tk()
+root.title("Serie de Fourier Interactiva")
+
+x = symbols('x')
+
+# Variables de control
+n_terms = IntVar(value=1)
+funcion_usuario = StringVar(value="x")  # Función por defecto
+
+# Genera coeficientes a0, an, bn
+def calcular_coeficientes(fx, n, L=np.pi):
+    a0 = (1 / L) * integrate(fx, (x, -L, L))
+    an = [(1 / L) * integrate(fx * cos(k * np.pi * x / L), (x, -L, L)) for k in range(1, n+1)]
+    bn = [(1 / L) * integrate(fx * sin(k * np.pi * x / L), (x, -L, L)) for k in range(1, n+1)]
+    return a0, an, bn
+
+# Construye la serie de Fourier
+def construir_serie(a0, an, bn, L=np.pi):
+    def serie(x_val, n):
+        suma = a0 / 2
+        for k in range(1, n + 1):
+            suma += an[k-1] * np.cos(k * np.pi * x_val / L)
+            suma += bn[k-1] * np.sin(k * np.pi * x_val / L)
+        return suma
+    return np.vectorize(lambda x_val: float(serie(x_val, len(an))))
+
+# Graficar función original y su serie
+def graficar():
+    fig.clear()
+    ax = fig.add_subplot(111)
+
+    try:
+        fx = sympify(funcion_usuario.get())
+        n = n_terms.get()
+        L = np.pi
+        x_vals = np.linspace(-L, L, 500)
+
+        # Función original
+        f_lamb = lambdify(x, fx, modules=['numpy'])
+        y_original = f_lamb(x_vals)
+
+        a0, an, bn = calcular_coeficientes(fx, n, L)
+        f_aprox = construir_serie(a0, an, bn, L)
+        y_aprox = f_aprox(x_vals)
+
+        ax.plot(x_vals, y_original, label="Función original", linewidth=2)
+        ax.plot(x_vals, y_aprox, label=f"Serie de Fourier (n={n})", linestyle='--')
+        ax.legend()
+        ax.set_title("Aproximación de Fourier")
+        ax.grid(True)
+        canvas.draw()
+    except Exception as e:
+        print("Error al graficar:", e)
+
+# Funciones para modificar n
+def aumentar_n():
+    n_terms.set(n_terms.get() + 1)
+    graficar()
+
+def disminuir_n():
+    if n_terms.get() > 1:
+        n_terms.set(n_terms.get() - 1)
+        graficar()
+
+# Interfaz gráfica
+frame = Frame(root)
+frame.pack()
+
+Label(frame, text="f(x) = ").pack(side=LEFT)
+Entry(frame, textvariable=funcion_usuario, width=20).pack(side=LEFT)
+Button(frame, text="Graficar", command=graficar).pack(side=LEFT)
+
+frame2 = Frame(root)
+frame2.pack(pady=10)
+Button(frame2, text="-", command=disminuir_n).pack(side=LEFT)
+Label(frame2, textvariable=n_terms).pack(side=LEFT)
+Button(frame2, text="+", command=aumentar_n).pack(side=LEFT)
+
+# Área de gráfica
+fig = plt.Figure(figsize=(6, 4), dpi=100)
+canvas = FigureCanvasTkAgg(fig, master=root)
+canvas.get_tk_widget().pack()
+
+graficar()
+root.mainloop()
+furier
