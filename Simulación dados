@@ -1,0 +1,9 @@
+import random
+
+dado1 = random.randint(1, 6)
+dado2 = random.randint(1, 6)
+suma = dado1 + dado2
+
+print(f"El primer dado cayó en: {dado1}")
+print(f"El segundo dado cayó en: {dado2}")
+print(f"La suma de los dados es: {suma}")
