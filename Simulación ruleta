@@ -1,0 +1,15 @@
+import random
+
+# Parámetros
+giros = 50
+apuesta = 10  # cantidad apostada por giro
+
+# Números rojos en la ruleta americana
+rojos = {1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36}
+
+# Variables
+saldo = 0
+victorias = 0
+derrotas = 0
+
+print("Giro | Número | Color | Resultad
