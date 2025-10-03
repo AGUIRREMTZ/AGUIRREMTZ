@@ -1,0 +1,22 @@
+import asyncio
+import aiohttp
+import pandas as pd
+import matplotlib.pyplot as plt
+from datetime import datetime
+
+# API pública de CoinGecko
+API_URL = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart"
+
+async def fetch_data(session, days=1):
+    """Descarga los precios históricos de Bitcoin en USD."""
+    params = {"vs_currency": "usd", "days": days}
+    async with session.get(API_URL, params=params) as response:
+        return await response.json()
+
+async def main():
+    async with aiohttp.ClientSession() as session:
+        print("⏳ Descargando datos de Bitcoin...")
+        data = await fetch_data(session, days=1)  # precios del último día
+
+        # Convertimos a DataFrame
+        prices = data["prices]()
