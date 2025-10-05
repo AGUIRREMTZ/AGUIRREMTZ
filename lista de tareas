@@ -1,0 +1,30 @@
+import json
+from datetime import datetime
+
+# --- Excepción personalizada ---
+class TareaNoEncontrada(Exception):
+    pass
+
+
+# --- Clase principal ---
+class Tarea:
+    def __init__(self, titulo, prioridad, fecha=None, completada=False):
+        self.titulo = titulo
+        self.prioridad = prioridad  # 1 = Alta, 2 = Media, 3 = Baja
+        self.fecha = fecha or datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.completada = completada
+
+    def __repr__(self):
+        estado = "✅" if self.completada else "❌"
+        return f"[{estado}] {self.titulo} (Prioridad {self.prioridad}) - {self.fecha}"
+
+
+# --- Clase para manejar la lista ---
+class GestorTareas:
+    def __init__(self, archivo="tareas.json"):
+        self.archivo = archivo
+        self.tareas = self.cargar_tareas()
+
+    def guardar_tareas(self):
+        with open(self.archivo, "w", encoding="utf-8") as f:
+            json.dump([t.__dict__ for t in self.tareas], f, indent=4, ensure_ascii=False_
