@@ -1,0 +1,31 @@
+import csv
+import time
+import random
+from statistics import mean
+
+
+class RegistroVacio(Exception):
+    """Excepción para cuando no hay datos registrados."""
+    pass
+
+
+class MonitorTemperatura:
+    def __init__(self, archivo="temperaturas.csv"):
+        self.archivo = archivo
+        self.lecturas = self.cargar_datos()
+
+    def cargar_datos(self):
+        datos = []
+        try:
+            with open(self.archivo, "r", encoding="utf-8") as f:
+                lector = csv.DictReader(f)
+                for fila in lector:
+                    datos.append(float(fila["temperatura"]))
+        except FileNotFoundError:
+            pass
+        return datos
+
+    def guardar_datos(self):
+        with open(self.archivo, "w", newline="", encoding="utf-8") as f:
+            escritor = csv.writer(f)
+            escritor.writerow(
