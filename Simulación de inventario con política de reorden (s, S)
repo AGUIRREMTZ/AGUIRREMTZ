@@ -1,0 +1,61 @@
+import random
+import matplotlib.pyplot as plt
+
+# Parámetros del sistema
+DIAS = 200 ese q
+s = 20      # punto de reorden
+S = 80      # nivel máximo de inventario
+costo_orden = 50
+costo_mantener = 1
+costo_falta = 5
+demanda_promedio = 15
+
+# Variables del sistema
+inventario = S
+inventario_diario = []
+costo_total = 0
+pedidos_pendientes = []
+
+# Simulación
+for dia in range(DIAS):
+    # Llegada de pedido (si hay alguno pendiente)
+    if pedidos_pendientes and pedidos_pendientes[0][0] == dia:
+        inventario += pedidos_pendientes[0][1]
+        pedidos_pendientes.pop(0)
+
+    # Demanda del día (aleatoria Poisson)
+    demanda = random.poissonvariate(demanda_promedio) if hasattr(random, "poissonvariate") else random.randint(10, 20)
+    if demanda > inventario:
+        costo_total += (demanda - inventario) * costo_falta
+        inventario = 0
+    else:
+        inventario -= demanda
+
+    # Revisión de inventario y orden si está por debajo de s
+    if inventario < s:
+        pedido = S - inventario
+        costo_total += costo_orden
+        pedidos_pendientes.append((dia + 2, pedido))  # llega en 2 días
+
+    # Costos de mantener inventario
+    costo_total += inventario * costo_mantener
+
+    inventario_diario.append(inventario)
+
+# Resultados
+print("\n--- RESULTADOS DEL MODELO DE INVENTARIO (s, S) ---")
+print(f"Días simulados: {DIAS}")
+print(f"Costo total acumulado: ${costo_total:.2f}")
+print(f"Inventario promedio: {sum(inventario_diario)/DIAS:.2f}")
+print(f"Número de órdenes realizadas: {len(pedidos_pendientes)}")
+
+# Gráfica
+plt.plot(range(DIAS), inventario_diario, color='green')
+plt.axhline(s, color='red', linestyle='--', label='Nivel de reorden (s)')
+plt.axhline(S, color='blue', linestyle='--', label='Nivel máximo (S)')
+plt.title("Simulación de Inventario con Política (s, S)")
+plt.xlabel("Día")
+plt.ylabel("Inventario")
+plt.legend()
+plt.grid(True)
+plt.show()
