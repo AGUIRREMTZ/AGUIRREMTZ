@@ -1,0 +1,81 @@
+import os
+
+class Task:
+    def __init__(self, description, completed=False):
+        self.description = description
+        self.completed = completed
+
+    def __str__(self):
+        status = "✔️" if self.completed else "⏳"
+        return f"{status} {self.description}"
+
+class TaskManager:
+    FILE_NAME = "tasks.txt"
+
+    def __init__(self):
+        self.tasks = []
+        self.load_tasks()
+
+    def load_tasks(self):
+        """Carga las tareas desde el archivo si existe."""
+        if os.path.exists(self.FILE_NAME):
+            with open(self.FILE_NAME, "r") as file:
+                for line in file:
+                    description, completed = line.strip().split(";")
+                    self.tasks.append(Task(description, completed == "True"))
+
+    def save_tasks(self):
+        """Guarda las tareas en el archivo."""
+        with open(self.FILE_NAME, "w") as file:
+            for task in self.tasks:
+                file.write(f"{task.description};{task.completed}\n")
+
+    def add_task(self, description):
+        self.tasks.append(Task(description))
+        print("✅ Tarea agregada exitosamente.")
+
+    def show_tasks(self):
+        if not self.tasks:
+            print("📭 No hay tareas registradas.")
+        for idx, task in enumerate(self.tasks, start=1):
+            print(f"{idx}. {task}")
+
+    def complete_task(self, task_number):
+        try:
+            self.tasks[task_number - 1].completed = True
+            print("✅ Tarea marcada como completada.")
+        except IndexError:
+            print("❌ Número de tarea no válido.")
+
+def menu():
+    manager = TaskManager()
+
+    while True:
+        print("\n--- Gestor de Tareas ---")
+        print("1. Ver tareas")
+        print("2. Agregar tarea")
+        print("3. Completar tarea")
+        print("4. Salir")
+        option = input("Elige una opción: ")
+
+        if option == "1":
+            manager.show_tasks()
+        elif option == "2":
+            desc = input("Descripción de la tarea: ")
+            manager.add_task(desc)
+        elif option == "3":
+            manager.show_tasks()
+            try:
+                num = int(input("Número de tarea a completar: "))
+                manager.complete_task(num)
+            except ValueError:
+                print("❌ Ingresa un número válido.")
+        elif option == "4":
+            manager.save_tasks()
+            print("💾 Tareas guardadas. ¡Adiós!")
+            break
+        else:
+            print("⚠️ Opción no válida, intenta de nuevo.")
+
+if __name__ == "__main__":
+    menu()
