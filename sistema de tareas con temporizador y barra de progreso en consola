@@ -1,0 +1,46 @@
+import time
+import threading
+from functools import wraps
+
+tasks = []
+
+def tarea(delay):
+    """Decorador para registrar funciones que se ejecutarán después de 'delay' segundos."""
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            print(f"\n⏳ Ejecutando tarea: {func.__name__}")
+            barra_progreso(3)  # Simula una tarea que tarda 3 segundos
+            return func(*args, **kwargs)
+        tasks.append((wrapper, delay))
+        return wrapper
+    return decorator
+
+def barra_progreso(seconds):
+    """Muestra una barra de progreso en consola."""
+    for i in range(1, seconds * 10 + 1):
+        time.sleep(0.1)
+        progreso = int((i / (seconds * 10)) * 20)
+        barra = '█' * progreso + '-' * (20 - progreso)
+        print(f"\r[{barra}] {int((progreso / 20) * 100)}%", end="")
+    print()
+
+def ejecutar_tareas():
+    """Ejecuta todas las tareas registradas después del tiempo indicado."""
+    for func, delay in tasks:
+        threading.Timer(delay, func).start()
+        print(f"✅ Tarea '{func.__name__}' programada en {delay} segundos.")
+
+# ============ Ejemplo de uso ============
+
+@tarea(2)
+def saludo():
+    print("👋 Hola, esta es una tarea ejecutada con decoradores y temporizador.")
+
+@tarea(5)
+def despedida():
+    print("👋 Adiós, la tarea finalizó correctamente.")
+
+if __name__ == "__main__":
+    print("📌 Iniciando sistema de tareas...")
+    ejecutar_tareas()
